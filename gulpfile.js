@@ -44,7 +44,10 @@ gulp.task('pug', () => {
 
 gulp.task('styles', () => {
 	return gulp.src('app/'+syntax+'/**/*.'+syntax+'')
-	.pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
+	.pipe(sass({ 
+		outputStyle: 'expanded', 
+		includePaths: require('node-bourbon').includePaths
+	}).on("error", notify.onError()))
 	.pipe(rename({ suffix: '.min', prefix : '' }))
 	.pipe(autoprefixer(['last 15 versions']))
 	// .pipe(cleancss( {level: { 1: { specialComments: 0 } } })) // Opt., comment out when debugging
