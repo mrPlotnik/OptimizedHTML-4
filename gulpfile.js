@@ -3,20 +3,29 @@ var syntax        = 'sass', // Syntax: sass or scss;
 
 var gulp          = require('gulp'),
 		gutil         = require('gulp-util' ),
+
+		pug 					= require('gulp-pug'),
+		plumber 			= require('gulp-plumber'),
+
 		sass          = require('gulp-sass'),
+		autoprefixer  = require('gulp-autoprefixer'),
+		cleancss      = require('gulp-clean-css'),
+
+		imagemin 			= require('gulp-imagemin'),
+		cache         = require('gulp-cache'),
 		browserSync   = require('browser-sync'),
 		concat        = require('gulp-concat'),
-		uglify        = require('gulp-uglify'),
-		cleancss      = require('gulp-clean-css'),
-		rename        = require('gulp-rename'),
-		autoprefixer  = require('gulp-autoprefixer'),
+		uglify        = require('gulp-uglify'),		
+		rename        = require('gulp-rename'),		
 		notify        = require('gulp-notify'),
-		rsync         = require('gulp-rsync');
+		rsync         = require('gulp-rsync'),
+
+		reload				= browserSync.reload; 
 
 gulp.task('browser-sync', function() {
 	browserSync({
 		server: {
-			baseDir: 'app'
+			baseDir: 'dist'
 		},
 		notify: false,
 		// open: false,
@@ -25,36 +34,45 @@ gulp.task('browser-sync', function() {
 	})
 });
 
-gulp.task('styles', function() {
+gulp.task('pug', () => {
+	return gulp.src('app/pug/*.pug')
+	.pipe(plumber())
+	.pipe(pug({pretty: true})) // Компилируем с индентами
+	.pipe(gulp.dest('dist/'))   
+	.pipe(reload({ stream: true }))	
+});
+
+gulp.task('styles', () => {
 	return gulp.src('app/'+syntax+'/**/*.'+syntax+'')
 	.pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
 	.pipe(rename({ suffix: '.min', prefix : '' }))
 	.pipe(autoprefixer(['last 15 versions']))
-	.pipe(cleancss( {level: { 1: { specialComments: 0 } } })) // Opt., comment out when debugging
-	.pipe(gulp.dest('app/css'))
+	// .pipe(cleancss( {level: { 1: { specialComments: 0 } } })) // Opt., comment out when debugging
+	.pipe(gulp.dest('dist/css'))
 	.pipe(browserSync.stream())
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', () => {
 	return gulp.src([
-		'app/libs/jquery/dist/jquery.min.js',
+		'app/libs/preinstall/jquery/dist/jquery.min.js',
 		'app/js/common.js', // Always at the end
 		])
 	.pipe(concat('scripts.min.js'))
 	// .pipe(uglify()) // Mifify js (opt.)
-	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.reload({ stream: true }))
+	.pipe(gulp.dest('dist/js'))
+	.pipe(reload({ stream: true }))
 });
 
-gulp.task('code', function() {
-	return gulp.src('app/*.html')
-	.pipe(browserSync.reload({ stream: true }))
-});
+gulp.task('imagemin', () =>
+	gulp.src('app/img/**/*')	
+		.pipe(cache(imagemin()) // Cache Images
+		.pipe(gulp.dest('dist/img/'))
+));
 
-gulp.task('rsync', function() {
-	return gulp.src('app/**')
+gulp.task('rsync', () => {
+	return gulp.src('dist/**')
 	.pipe(rsync({
-		root: 'app/',
+		root: 'dist/',
 		hostname: 'username@yousite.com',
 		destination: 'yousite/public_html/',
 		// include: ['*.htaccess'], // Includes files to deploy
@@ -70,16 +88,16 @@ if (gulpversion == 3) {
 	gulp.task('watch', ['styles', 'scripts', 'browser-sync'], function() {
 		gulp.watch('app/'+syntax+'/**/*.'+syntax+'', ['styles']);
 		gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['scripts']);
-		gulp.watch('app/*.html', ['code'])
+		gulp.watch('app/pug/**/*.pug', ['pug'])
 	});
 	gulp.task('default', ['watch']);
 }
 
 if (gulpversion == 4) {
-	gulp.task('watch', function() {
+	gulp.task('watch', () => {
 		gulp.watch('app/'+syntax+'/**/*.'+syntax+'', gulp.parallel('styles'));
 		gulp.watch(['libs/**/*.js', 'app/js/common.js'], gulp.parallel('scripts'));
-		gulp.watch('app/*.html', gulp.parallel('code'))
+		gulp.watch('app/pug/**/*.pug', gulp.parallel('pug'))
 	});
-	gulp.task('default', gulp.parallel('styles', 'scripts', 'browser-sync', 'watch'));
+	gulp.task('default', gulp.parallel('styles', 'pug', 'scripts', 'imagemin', 'browser-sync', 'watch'));
 }
