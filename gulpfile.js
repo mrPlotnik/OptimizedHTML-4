@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 'use strict';
 
 var syntax        = 'sass', // Syntax: sass or scss
 		gulpversion   = '4'; // Gulp version: 3 or 4
-=======
+
 let isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
->>>>>>> c9aedecf8afe9c7d63dff3ba791939ea1ec09e41
 
 const 
 		gulp          = require('gulp'),
@@ -20,10 +18,7 @@ const
 
 		sass          = require('gulp-sass'),
 		cssToScss 		= require('gulp-css-scss'),
-<<<<<<< HEAD
 
-=======
->>>>>>> c9aedecf8afe9c7d63dff3ba791939ea1ec09e41
 		autoprefixer  = require('gulp-autoprefixer'),
 		csso 					= require('gulp-csso'),
 
@@ -37,7 +32,6 @@ const
 		notify        = require('gulp-notify'),
 		gulpIf 				= require('gulp-if'),		
 		gutil         = require('gulp-util');				
-
 
 //-------------------------------------------
 // https://habr.com/ru/post/259225/
@@ -92,7 +86,7 @@ gulp.task('sass', () => {
 //-------------------------------------------
 gulp.task('js', () => {
 	return gulp.src([
-		'app/libs/preinstall/jquery/dist/jquery.min.js',
+		'app/libs/jquery/dist/jquery.min.js',
 		'app/js/common.js', // Always at the end
 		])
 		.pipe(gulpIf(isDev, sourceMaps.init()))
@@ -188,10 +182,10 @@ gulp.task('cssToScss', () => {
 // Наблюдаем за изменениями, компилируем, перезагружаем
 //----------------------------------------------
 gulp.task('watch', gulp.parallel('pug', 'sass', 'js', 'php', 'imagemin', 'browser-sync', () => {
-	gulp.watch('app/pug/**/*.pug',  gulp.parallel('pug'));
+	gulp.watch('app/pug/**/*.pug',  gulp.series('pug'));
 	gulp.watch('app/sass/*.sass',  gulp.series('sass'));
-	gulp.watch('app/js/*.js',  gulp.parallel('js'));
-	gulp.watch('app/*.php',  gulp.parallel('php'));
+	gulp.watch('app/js/*.js',  gulp.series('js'));
+	gulp.watch('app/*.php',  gulp.series('php'));
 }));	
 
 //-------------------------------------------	
