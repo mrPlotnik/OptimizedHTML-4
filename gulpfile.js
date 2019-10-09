@@ -1,4 +1,6 @@
-var syntax        = 'sass', // Syntax: sass or scss;
+'use strict';
+
+var syntax        = 'sass', // Syntax: sass or scss
 		gulpversion   = '4'; // Gulp version: 3 or 4
 
 var gulp          = require('gulp'),
@@ -8,6 +10,8 @@ var gulp          = require('gulp'),
 		plumber 			= require('gulp-plumber'),
 
 		sass          = require('gulp-sass'),
+		cssToScss 		= require('gulp-css-scss'),
+
 		autoprefixer  = require('gulp-autoprefixer'),
 		cleancss      = require('gulp-clean-css'),
 
@@ -35,11 +39,11 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('pug', () => {
-	return gulp.src('app/pug/*.pug')
+	return gulp.src('app/pug/index.pug')
 	.pipe(plumber())
 	.pipe(pug({pretty: true})) // Компилируем с индентами
 	.pipe(gulp.dest('dist/'))   
-	.pipe(reload({ stream: true }))	
+	.pipe(reload({stream: true}))	
 });
 
 gulp.task('styles', () => {
