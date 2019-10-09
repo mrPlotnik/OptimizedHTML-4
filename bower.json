@@ -1,0 +1,30 @@
+{
+	"name": "fitness",
+	"description": "",
+	"main": "gulpfile.js",
+	"authors": [
+		"Alena <alenakrivohiza@gmail.com>"
+	],
+	"license": "ISC",
+	"homepage": "https://github.com/AlenkaKR/Fitness",
+	"private": true,
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"app/libs/",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"bootstrap": "^4.3.1"
+	},
+	"devDependencies": {
+		"animate.css": "^3.7.0",
+		"jquery": "^3.3.1",
+		"jQuery.equalHeights": "jquery.equalheights#^1.5.2",
+		"page-scroll-to-id": "^1.5.9",
+		"bootstrap-validator": "^0.11.9",
+		"magnific-popup": "^1.1.0"
+	}
+}
