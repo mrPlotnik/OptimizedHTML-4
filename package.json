@@ -1,12 +1,9 @@
 {
   "name": "optimizedhtml",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "OptimizedHTML 4 - Start HTML Template",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "plotnik",
+  "main": "gulpfile.js",
+  "author": "plotnik",  
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.26.7",
@@ -28,5 +25,12 @@
     "gulp-util": "^3.0.8",
     "node-bourbon": "^4.2.8",
     "vinyl-ftp": "^0.6.1"
-  }
-}
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrPlotnik/OptimizedHTML-4.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrPlotnik/OptimizedHTML-4/issues"
+  },
+  "homepage": "https://github.com/mrPlotnik/OptimizedHTML-4#readme"}
