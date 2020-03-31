@@ -1,4 +1,5 @@
 /.git/
+/.gitattributes/
 /node_modules/
 /dist/
 
